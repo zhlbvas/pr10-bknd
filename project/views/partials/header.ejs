@@ -1,0 +1,19 @@
+
+<header class="header">
+    <a href="/" class="logo">ASTANA GUIDE</a>
+
+    <nav>
+        <a href="/">Главная</a>
+        <a href="/about">О проекте</a>
+
+        <% if (typeof isAdmin !== "undefined" && isAdmin) { %>
+            <a href="/add">Добавить место</a>
+
+            <form action="/logout" method="POST" style="display:inline;">
+                <button type="submit" class="button">Выйти</button>
+            </form>
+        <% } else { %>
+            <a href="/login">Вход администратора</a>
+        <% } %>
+    </nav>
+</header>

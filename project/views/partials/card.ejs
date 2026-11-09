@@ -1,0 +1,29 @@
+<article class="card">
+
+    <% if (place.image) { %>
+        <img
+            src="<%= place.image %>"
+            alt="<%= place.title %>"
+            class="card-image"
+            onerror="this.style.display='none'"
+        >
+    <% } %>
+
+    <div class="card-content">
+
+        <p class="card-category">
+            <%= place.category %>
+        </p>
+
+        <h2><%= place.title %></h2>
+
+        <p class="card-description">
+            <%= place.description %>
+        </p>
+
+        <a href="/place/<%= place.id %>" class="card-button">
+            Подробнее →
+        </a>
+
+    </div>
+</article>

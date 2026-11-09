@@ -1,0 +1,16 @@
+
+<%- include("partials/head", { title: "Ошибка" }) %>
+<body>
+
+    <%- include("partials/header") %>
+
+    <main class="container">
+        <h1>Ошибка</h1>
+        <p class="empty"><%= message %></p>
+        <a class="back-link" href="/">На главную</a>
+    </main>
+
+    <%- include("partials/footer", { year: 2026 }) %>
+
+</body>
+</html>

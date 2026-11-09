@@ -1,0 +1,38 @@
+
+<%- include("partials/head", { title: title }) %>
+<body>
+
+    <%- include("partials/header") %>
+
+    <main class="container detail-page">
+        <a href="/" class="back-link">← Назад к достопримечательностям</a>
+
+        <article class="detail-card">
+
+            <% if (place.image) { %>
+    <img
+        src="<%= place.image.startsWith('/') ? place.image : '/images/' + place.image %>"
+        alt="<%= place.title %>"
+        class="detail-image"
+        onerror="this.style.display='none'"
+    >
+<% } %>
+
+            <p class="category">
+                <%= place.category || "Достопримечательность" %>
+            </p>
+
+            <h1><%= place.title %></h1>
+
+            <p><%= place.description %></p>
+
+            <p>
+                <strong>Время посещения:</strong>
+                <%= place.time || "Не указано" %>
+            </p>
+
+        </article>
+    </main>
+
+</body>
+</html>

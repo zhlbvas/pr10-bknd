@@ -1,0 +1,44 @@
+
+<%- include("partials/head", { title: title }) %>
+<body>
+
+    <%- include("partials/header") %>
+
+    <main class="container">
+        <h1>Вход для администратора</h1>
+
+        <% if (error) { %>
+            <div class="errors">
+                <p><%= error %></p>
+            </div>
+        <% } %>
+
+        <form action="/login" method="POST" class="place-form">
+
+            <label for="login">Логин:</label>
+            <input
+                type="text"
+                id="login"
+                name="login"
+                required
+            >
+
+            <label for="password">Пароль:</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                required
+            >
+
+            <button type="submit" class="button">
+                Войти
+            </button>
+
+        </form>
+
+        <a href="/" class="back-link">На главную</a>
+    </main>
+
+</body>
+</html>

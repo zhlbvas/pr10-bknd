@@ -1,0 +1,88 @@
+
+<%- include("partials/head", { title: title }) %>
+<body>
+
+    <%- include("partials/header") %>
+
+    <main class="container form-container">
+        <h1>Добавить достопримечательность</h1>
+
+        <p>
+            Расскажи о новом интересном месте в Астане.
+        </p>
+
+        <% if (errors.length > 0) { %>
+            <div class="errors">
+                <strong>Проверь следующие поля:</strong>
+
+                <ul>
+                    <% errors.forEach(function(error) { %>
+                        <li><%= error %></li>
+                    <% }); %>
+                </ul>
+            </div>
+        <% } %>
+
+        <form action="/add" method="POST" class="place-form">
+
+            <label for="title">Название</label>
+            <input
+                type="text"
+                id="title"
+                name="title"
+                value="<%= formData.title || '' %>"
+                placeholder="Например, Байтерек"
+                required
+            >
+
+            <label for="description">Описание</label>
+            <textarea
+                id="description"
+                name="description"
+                rows="5"
+                placeholder="Расскажи об этом месте"
+                required
+            ><%= formData.description || '' %></textarea>
+
+            <label for="category">Категория</label>
+            <input
+                type="text"
+                id="category"
+                name="category"
+                value="<%= formData.category || '' %>"
+                placeholder="Архитектура, музей, парк"
+                required
+            >
+
+            <label for="time">Время посещения</label>
+            <input
+                type="text"
+                id="time"
+                name="time"
+                value="<%= formData.time || '' %>"
+                placeholder="Например, 1–2 часа"
+                required
+            >
+
+            <label for="image">Изображение (необязательно)</label>
+            <input
+                type="text"
+                id="image"
+                name="image"
+                value="<%= formData.image || '' %>"
+                placeholder="baiterek.jpg"
+            >
+
+            <button type="submit" class="button">
+                Сохранить место
+            </button>
+
+            <a href="/" class="back-link">
+                Вернуться на главную
+            </a>
+
+        </form>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,303 @@
+
+<%- include("partials/head", { title: title }) %>
+
+<body>
+    <%- include("partials/header") %>
+
+    <main class="container">
+
+        <section class="hero">
+            <div class="hero-text">
+                <p class="subtitle">ПУТЕШЕСТВУЙ ПО СТОЛИЦЕ</p>
+
+                <h1>Открой для себя <span>Астану</span></h1>
+
+                <p class="hero-description">
+                    Исследуй красивые места, необычную архитектуру
+                    и достопримечательности столицы Казахстана.
+                    Найди своё любимое место в городе.
+                </p>
+
+                <% if (isAdmin) { %>
+                    <a href="/add" class="button">
+                        + Добавить достопримечательность
+                    </a>
+                <% } %>
+
+                <div class="hero-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="welcome-section">
+            <div class="welcome-decoration">✿</div>
+            <p>WELCOME TO ASTANA</p>
+            <h2>Город, который стоит увидеть</h2>
+            <span>
+                Архитектура, история и места, которые создают
+                особенный характер столицы.
+            </span>
+        </section>
+
+        <section class="places-section">
+            <div class="section-heading">
+                <div>
+                    <p class="subtitle">DISCOVER THE CITY</p>
+                    <h2>Интересные места</h2>
+                </div>
+
+                <span class="places-count">
+                    <%= places.length %> мест
+                </span>
+            </div>
+
+            <% if (places.length === 0) { %>
+
+                <div class="empty-state">
+                    <span class="empty-flower">✿</span>
+                    <h3>Пока нет достопримечательностей</h3>
+                    <p>Скоро здесь появятся интересные места Астаны.</p>
+                </div>
+
+            <% } else { %>
+
+                <div class="cards">
+
+                    <% places.forEach(function(place, index) { %>
+
+                        <article class="card">
+
+                            <div class="card-image-wrapper">
+
+                                <% if (place.image) { %>
+                                    <img
+                                        src="<%= place.image %>"
+                                        alt="<%= place.title %>"
+                                        class="card-image"
+                                        onerror="this.style.display='none'"
+                                    >
+                                <% } else { %>
+                                    <div class="image-placeholder">
+                                        <span>ASTANA</span>
+                                        <span class="placeholder-flower">✿</span>
+                                    </div>
+                                <% } %>
+
+                                <span class="card-number">
+                                    <%= String(index + 1).padStart(2, "0") %>
+                                </span>
+
+                            </div>
+
+                            <div class="card-content">
+
+                                <p class="category">
+                                    <%= place.category || "Достопримечательность" %>
+                                </p>
+
+                                <h3><%= place.title %></h3>
+
+                                <p class="card-description">
+                                    <%= place.description %>
+                                </p>
+
+                                <p class="time">
+                                    Время посещения:
+                                    <%= place.time || "Не указано" %>
+                                </p>
+
+                                <a
+                                    href="/place/<%= place.id %>"
+                                    class="card-link"
+                                >
+                                    Подробнее <span>→</span>
+                                </a>
+
+                                <% if (isAdmin) { %>
+
+                                    <div class="admin-card-actions">
+
+                                        <button
+                                            type="button"
+                                            class="edit-place"
+                                            data-id="<%= place.id %>"
+                                            data-title="<%= place.title %>"
+                                            data-description="<%= place.description %>"
+                                            data-category="<%= place.category %>"
+                                            data-time="<%= place.time %>"
+                                            data-image="<%= place.image || '' %>"
+                                        >
+                                            Редактировать
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="delete-place"
+                                            data-id="<%= place.id %>"
+                                        >
+                                            Удалить
+                                        </button>
+
+                                    </div>
+
+                                <% } %>
+
+                            </div>
+                        </article>
+
+                    <% }); %>
+
+                </div>
+
+            <% } %>
+        </section>
+
+        <section class="about-banner">
+            <div>
+                <p class="subtitle">GET TO KNOW THE CITY</p>
+                <h2>Астана — больше, чем просто город</h2>
+                <p>
+                    Открой для себя столицу Казахстана
+                    с новой стороны.
+                </p>
+                <a href="/about" class="banner-link">
+                    О нашем проекте →
+                </a>
+            </div>
+
+            <div class="banner-flower">✿</div>
+        </section>
+
+    </main>
+
+    <%- include("partials/footer", { year: 2026 }) %>
+
+    <script>
+
+    // Удаление достопримечательности
+    document.querySelectorAll(".delete-place").forEach(button => {
+
+        button.addEventListener("click", async () => {
+
+            const id = button.dataset.id;
+
+            const confirmDelete = confirm(
+                "Вы действительно хотите удалить эту достопримечательность?"
+            );
+
+            if (!confirmDelete) return;
+
+            try {
+
+                const response = await fetch(`/api/places/${id}`, {
+                    method: "DELETE"
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    alert(result.message);
+                    return;
+                }
+
+                alert(result.message);
+                location.reload();
+
+            } catch (error) {
+                console.error(error);
+                alert("Ошибка при удалении.");
+            }
+
+        });
+
+    });
+
+
+    // Редактирование достопримечательности
+    document.querySelectorAll(".edit-place").forEach(button => {
+
+        button.addEventListener("click", async () => {
+
+            const id = button.dataset.id;
+
+            const title = prompt(
+                "Название:",
+                button.dataset.title
+            );
+
+            if (title === null) return;
+
+            const description = prompt(
+                "Описание:",
+                button.dataset.description
+            );
+
+            if (description === null) return;
+
+            const category = prompt(
+                "Категория:",
+                button.dataset.category
+            );
+
+            if (category === null) return;
+
+            const time = prompt(
+                "Время посещения:",
+                button.dataset.time
+            );
+
+            if (time === null) return;
+
+            const image = prompt(
+                "Ссылка или путь к изображению:",
+                button.dataset.image
+            );
+
+            if (image === null) return;
+
+            try {
+
+                const response = await fetch(`/api/places/${id}`, {
+
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        title,
+                        description,
+                        category,
+                        time,
+                        image
+                    })
+
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    alert(result.message);
+                    return;
+                }
+
+                alert(result.message);
+                location.reload();
+
+            } catch (error) {
+                console.error(error);
+                alert("Ошибка при редактировании.");
+            }
+
+        });
+
+    });
+
+    </script>
+
+</body>
+</html>
